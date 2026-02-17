@@ -47,7 +47,7 @@ jobs:
           coverage: xdebug
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist
+        run: composer update --no-interaction --prefer-dist
 
       - name: Run unit tests
         run: composer test:unit
@@ -74,7 +74,7 @@ jobs:
           coverage: xdebug
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist
+        run: composer update --no-interaction --prefer-dist
 
       - name: Generate coverage
         run: vendor/bin/phpunit --testsuite Unit --coverage-clover coverage.xml
