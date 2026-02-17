@@ -1,0 +1,55 @@
+{
+    "name": "procoders/astrology-api-php",
+    "description": "PHP SDK for interacting with the Astrology API v3.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "astrology",
+        "horoscope",
+        "natal-chart",
+        "zodiac",
+        "api",
+        "sdk",
+        "vedic",
+        "tarot",
+        "numerology",
+        "human-design"
+    ],
+    "homepage": "https://github.com/astro-api/astroapi-php",
+    "support": {
+        "issues": "https://github.com/astro-api/astroapi-php/issues",
+        "source": "https://github.com/astro-api/astroapi-php"
+    },
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.50",
+        "phpdocumentor/phpdocumentor": "^3.8",
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Procoders\\AstrologyApi\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Procoders\\AstrologyApi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite Unit",
+        "test:integration": "phpunit --testsuite Integration",
+        "lint": "php-cs-fixer fix --dry-run --diff",
+        "lint:fix": "php-cs-fixer fix",
+        "coverage": "phpunit --coverage-html coverage --coverage-text"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

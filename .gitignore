@@ -1,0 +1,11 @@
+/vendor/
+/.phpunit.result.cache
+/.phpunit.cache/
+/coverage/
+/docs/
+/.php-cs-fixer.cache
+/.idea/
+/.DS_Store
+/.env.testing
+coverage.xml
+./openapi.json

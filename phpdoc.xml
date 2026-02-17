@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpdoc version="3.4">
+    <title>Astrology API PHP SDK</title>
+    <paths>
+        <output>docs</output>
+        <cache>.phpdoc/cache</cache>
+    </paths>
+    <templates>
+        <template name="clean"/>
+    </templates>
+    <transformations>
+        <transformation writer="phpdoc\x5cTransformer\x5cWriter\x5cFile\x5cIo" source="assets" artifact="assets"/>
+    </transformations>
+    <files>
+        <directory>src</directory>
+        <ignore hidden="true" vcs="true" symlinks="true"/>
+    </files>
+</phpdoc>
