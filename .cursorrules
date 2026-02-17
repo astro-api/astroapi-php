@@ -1,0 +1,90 @@
+You are working on `procoders/astrology-api-php` — a PHP 8.1+ SDK for the Astrology API v3.
+
+# Stack
+- PHP 8.1+ with `declare(strict_types=1)` in every file
+- Guzzle 7 for HTTP
+- PHPUnit 10 for testing
+- PHP-CS-Fixer (PSR-12 + single quotes + short arrays + strict params)
+
+# Architecture
+Entry point: `src/AstrologyClient.php` — creates Guzzle client with middleware (retry, API key, logging) and 26 readonly category client properties.
+
+Data flow: CategoryClient method → Validators::validate*() → $this->http->post() → GuzzleHttpHelper → Guzzle → API
+
+Key files:
+- `src/Categories/BaseCategoryClient.php` — abstract base with `buildUrl(string ...$segments)`
+- `src/Utils/HttpHelper.php` — interface: get/post/put/delete
+- `src/Utils/GuzzleHttpHelper.php` — extracts `data` or `result` from JSON responses
+- `src/Utils/Validators.php` — all static validation, throws `AstrologyError`
+- `src/Exceptions/AstrologyError.php` — single exception type with statusCode, errorCode, details
+- `src/Categories/InsightsClient.php` — special: contains 5 nested sub-clients
+
+# Strict Rules
+1. Every class is `final` unless it needs inheritance
+2. Use `readonly` properties for immutable state
+3. Category client methods return `mixed`, take `array $options = []` as last param
+4. Validate BEFORE HTTP calls, never after
+5. Only throw `AstrologyError` — never other exception types
+6. Validation context strings: `'ClassName.fieldName'` format
+7. `buildUrl()` accepts only strings — cast integers: `(string) $year`
+
+# New Category Client Pattern
+```php
+<?php
+declare(strict_types=1);
+namespace Procoders\AstrologyApi\Categories;
+use Procoders\AstrologyApi\Utils\HttpHelper;
+use Procoders\AstrologyApi\Utils\Validators;
+
+final class FooClient extends BaseCategoryClient
+{
+    private const API_PREFIX = '/api/v3/foo';
+    public function __construct(HttpHelper $http) { parent::__construct($http, self::API_PREFIX); }
+
+    public function getBar(array $request, array $options = []): mixed
+    {
+        Validators::validateSubject($request['subject'] ?? [], 'BarRequest.subject');
+        return $this->http->post($this->buildUrl('bar'), $request, $options);
+    }
+}
+```
+Then register in AstrologyClient.php: add use import, readonly property, constructor instantiation.
+
+# Unit Test Pattern
+Use `SpyHttpHelper` (captures lastMethod, lastPath, lastPayload, lastQuery, lastOptions):
+```php
+$this->http = new SpyHttpHelper();
+$this->client = new FooClient($this->http);
+$this->client->getBar(['subject' => $this->subject()]);
+self::assertSame('/api/v3/foo/bar', $this->http->lastPath);
+```
+
+# Integration Test Pattern
+Extend `IntegrationTestCase` — auto-skips without `ASTROLOGY_API_KEY` env var:
+```php
+$response = self::$client->foo->getBar(['subject' => $this->subject()]);
+$this->assertSuccessResponse($response);
+```
+Real API needs location inside `birth_data`: latitude, longitude, city, nation, timezone.
+
+# Validation Reference
+Subject: birth_data with year(1900-2100), month(1-12), day(1-31), hour(0-23), minute(0-59), second(0-59)
+Sun signs: Aries..Pisces + Ari,Tau,Gem,Can,Vir,Lib,Sco,Sag,Cap,Aqu,Pis
+Horoscope formats: paragraph, bullets, short, long
+Progression types: secondary, primary, tertiary, minor
+Direction types: solar_arc, symbolic, profection, naibod
+House systems: P, W, K, A, R, C, B, M, O, E, V, X, H, T, G
+
+# Commands
+```
+composer test           # all tests
+composer test:unit      # mocked unit tests
+composer test:integration  # real API (needs ASTROLOGY_API_KEY)
+composer lint           # check style
+composer lint:fix       # auto-fix
+```
+
+# Pitfalls
+- SVG/PDF endpoints return non-JSON — don't assume array
+- InsightsClient has nested sub-clients: $client->insights->relationship->getCompatibility(...)
+- Use caret constraints (^7.5) not exact versions — this is a library

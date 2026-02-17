@@ -1,5 +1,9 @@
 # Astrology API PHP SDK
 
+[![Get API Key](https://img.shields.io/badge/Get%20API%20Key-6C63FF?style=for-the-badge&logoColor=white)](https://dashboard.astrology-api.io/)
+[![API Documentation](https://img.shields.io/badge/API%20Documentation-FCC624?style=for-the-badge&logoColor=black)](https://api.astrology-api.io/rapidoc)
+[![Postman Collection](https://img.shields.io/badge/Postman%20Collection-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://api.astrology-api.io/best-astrology-api-postman.json)
+
 [![CI](https://github.com/astro-api/astroapi-php/actions/workflows/ci.yml/badge.svg)](https://github.com/astro-api/astroapi-php/actions/workflows/ci.yml)
 [![Latest Stable Version](https://poser.pugx.org/procoders/astrology-api-php/v)](https://packagist.org/packages/procoders/astrology-api-php)
 [![License](https://poser.pugx.org/procoders/astrology-api-php/license)](https://packagist.org/packages/procoders/astrology-api-php)
